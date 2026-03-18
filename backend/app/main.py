@@ -172,6 +172,17 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """
     # Startup
     logger.info("Starting Open Rentals API...")
+
+    # Run database migrations on startup
+    try:
+        from alembic.config import Config
+        from alembic import command
+        alembic_cfg = Config("/app/alembic.ini")
+        command.upgrade(alembic_cfg, "head")
+        logger.info("Database migrations applied")
+    except Exception as e:
+        logger.error("Failed to run migrations: %s", e)
+
     logger.info("Open Rentals API started successfully")
 
     yield
