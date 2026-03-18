@@ -1,0 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Block admin and dashboard pages from indexing
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /auth/
+
+# Sitemap location
+Sitemap: https://miamirentals.com/sitemap.xml
