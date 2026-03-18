@@ -22,13 +22,12 @@ export interface Property {
   title: string;
   address: string;
   neighborhood: string;
-  price: number;
-  beds: number;
-  baths: number;
-  sqft: number;
-  image: string;
-  images?: string[];
-  verified?: boolean;
+  monthly_rent: string;
+  bedrooms: number;
+  bathrooms: string;
+  square_feet?: number | null;
+  images: { url: string; is_primary: boolean }[];
+  is_verified?: boolean;
   featured?: boolean;
   available?: boolean;
   coordinates?: { lat: number; lng: number };
@@ -50,11 +49,13 @@ export function PropertyCard({ property, className, index = 0 }: PropertyCardPro
     setIsLiked(!isLiked);
   };
 
-  // Create a descriptive alt text for the property image
-  const imageAltText = `${property.title} - ${property.beds} bedroom${property.beds !== 1 ? 's' : ''}, ${property.baths} bathroom${property.baths !== 1 ? 's' : ''} property in ${property.neighborhood}`;
+  const imgSrc = property.images?.find((i) => i.is_primary)?.url ?? property.images?.[0]?.url ?? "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop";
+  const price = Number(property.monthly_rent).toLocaleString();
+  const beds = property.bedrooms;
+  const baths = parseFloat(property.bathrooms);
 
-  // Create accessible label for the entire card link
-  const cardAriaLabel = `View details for ${property.title} at ${property.address}. ${property.beds} bed${property.beds !== 1 ? 's' : ''}, ${property.baths} bath${property.baths !== 1 ? 's' : ''}, ${property.sqft.toLocaleString()} square feet. $${property.price.toLocaleString()} per month.${property.verified ? ' Verified listing.' : ''}${property.featured ? ' Featured property.' : ''}${property.available === false ? ' Currently not available.' : ''}`;
+  const imageAltText = `${property.title} - ${beds} bedroom${beds !== 1 ? 's' : ''}, ${baths} bathroom${baths !== 1 ? 's' : ''} property in ${property.neighborhood}`;
+  const cardAriaLabel = `View details for ${property.title} at ${property.address}. ${beds} bed${beds !== 1 ? 's' : ''}, ${baths} bath${baths !== 1 ? 's' : ''}${property.square_feet ? `, ${property.square_feet.toLocaleString()} square feet` : ''}. $${price} per month.${property.is_verified ? ' Verified listing.' : ''}${property.featured ? ' Featured property.' : ''}${property.available === false ? ' Currently not available.' : ''}`;
 
   return (
     <article className="h-full">
@@ -83,7 +84,7 @@ export function PropertyCard({ property, className, index = 0 }: PropertyCardPro
           )}
 
           <Image
-            src={property.image}
+            src={imgSrc}
             alt={imageAltText}
             fill
             onLoad={() => setImageLoaded(true)}
@@ -104,7 +105,7 @@ export function PropertyCard({ property, className, index = 0 }: PropertyCardPro
 
           {/* Badges with shine effect - visual only, info in aria-label */}
           <div className="absolute top-3 left-3 flex flex-wrap gap-2" aria-hidden="true">
-            {property.verified && (
+            {property.is_verified && (
               <Badge
                 variant="success"
                 className="badge-shine shadow-lg backdrop-blur-md bg-emerald-500/90 border-emerald-400/50 text-white"
@@ -168,7 +169,7 @@ export function PropertyCard({ property, className, index = 0 }: PropertyCardPro
               "group-hover/price:bg-gradient-to-r group-hover/price:from-sky-50 group-hover/price:to-emerald-50"
             )}>
               <span className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                ${property.price.toLocaleString()}
+                ${price}
               </span>
               <span className="text-sm text-gray-500 ml-1 font-medium">/mo</span>
             </div>
@@ -198,26 +199,28 @@ export function PropertyCard({ property, className, index = 0 }: PropertyCardPro
               <Bed className="h-4 w-4 text-sky-500 transition-transform duration-300 group-hover/detail:scale-110" aria-hidden="true" />
               <dt className="sr-only">Bedrooms</dt>
               <dd>
-                <span className="font-medium">{property.beds}</span>
-                <span className="text-gray-500 ml-1">{property.beds === 1 ? 'bed' : 'beds'}</span>
+                <span className="font-medium">{beds}</span>
+                <span className="text-gray-500 ml-1">{beds === 1 ? 'bed' : 'beds'}</span>
               </dd>
             </div>
             <div className="flex items-center gap-1.5 text-gray-700 transition-all duration-300 hover:text-emerald-600 group/detail">
               <Bath className="h-4 w-4 text-emerald-500 transition-transform duration-300 group-hover/detail:scale-110" aria-hidden="true" />
               <dt className="sr-only">Bathrooms</dt>
               <dd>
-                <span className="font-medium">{property.baths}</span>
-                <span className="text-gray-500 ml-1">{property.baths === 1 ? 'bath' : 'baths'}</span>
+                <span className="font-medium">{baths}</span>
+                <span className="text-gray-500 ml-1">{baths === 1 ? 'bath' : 'baths'}</span>
               </dd>
             </div>
+            {property.square_feet && (
             <div className="flex items-center gap-1.5 text-gray-700 transition-all duration-300 hover:text-emerald-600 group/detail">
               <Square className="h-4 w-4 text-emerald-500 transition-transform duration-300 group-hover/detail:scale-110" aria-hidden="true" />
               <dt className="sr-only">Square footage</dt>
               <dd>
-                <span className="font-medium">{property.sqft.toLocaleString()}</span>
+                <span className="font-medium">{property.square_feet.toLocaleString()}</span>
                 <span className="text-gray-500 ml-1">sqft</span>
               </dd>
             </div>
+            )}
           </dl>
 
           {/* Neighborhood Tag with premium styling */}

@@ -53,7 +53,7 @@ export function HomePageContent() {
   useEffect(() => {
     propertiesApi
       .list({ limit: 3 })
-      .then((res) => setFeaturedListings(res.data.slice(0, 3)))
+      .then((res) => setFeaturedListings(res.items.slice(0, 3)))
       .catch(() => {});
   }, []);
 
@@ -133,7 +133,9 @@ export function HomePageContent() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredListings.map((listing, i) => {
               const imgSrc =
-                listing.images?.[0] ?? FALLBACK_IMAGES[i % FALLBACK_IMAGES.length];
+                listing.images?.find((img) => img.is_primary)?.url ??
+                listing.images?.[0]?.url ??
+                FALLBACK_IMAGES[i % FALLBACK_IMAGES.length];
               return (
                 <Link key={listing.id} href={`/listings/${listing.slug}`}>
                   <Card variant="glass" interactive hoverGlow className="overflow-hidden h-full">
@@ -146,7 +148,7 @@ export function HomePageContent() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         loading="lazy"
                       />
-                      {listing.verified && (
+                      {listing.is_verified && (
                         <Badge className="absolute top-3 left-3" variant="success">
                           <CheckCircle className="h-3 w-3 mr-1" />
                           Verified
@@ -161,7 +163,7 @@ export function HomePageContent() {
                     </div>
                     <CardContent className="p-5">
                       <div className="text-2xl font-bold text-gray-900 mb-1">
-                        ${listing.price.toLocaleString()}<span className="text-sm font-normal text-gray-500">/mo</span>
+                        ${Number(listing.monthly_rent).toLocaleString()}<span className="text-sm font-normal text-gray-500">/mo</span>
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">{listing.title}</h3>
                       <p className="text-sm text-gray-600 mb-4 flex items-center">
@@ -169,13 +171,13 @@ export function HomePageContent() {
                         {listing.address}
                       </p>
                       <div className="flex items-center gap-4 text-sm text-gray-700">
-                        <span>{listing.beds} beds</span>
+                        <span>{listing.bedrooms} beds</span>
                         <span className="text-gray-400">|</span>
-                        <span>{listing.baths} baths</span>
-                        {listing.sqft && (
+                        <span>{parseFloat(listing.bathrooms)} baths</span>
+                        {listing.square_feet && (
                           <>
                             <span className="text-gray-400">|</span>
-                            <span>{listing.sqft.toLocaleString()} sqft</span>
+                            <span>{listing.square_feet.toLocaleString()} sqft</span>
                           </>
                         )}
                       </div>

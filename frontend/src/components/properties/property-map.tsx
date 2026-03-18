@@ -75,7 +75,7 @@ export function PropertyMap({
       el.className = "property-marker";
       el.innerHTML = `
         <div class="marker-content ${selectedId === listing.id ? "selected" : ""}">
-          $${listing.price.toLocaleString()}
+          $${Number(listing.monthly_rent).toLocaleString()}
         </div>
       `;
 
@@ -148,7 +148,7 @@ export function PropertyMap({
                 key={listing.id}
                 className="px-3 py-1.5 bg-slate-700/50 rounded-lg text-sm text-white border border-slate-600"
               >
-                ${listing.price.toLocaleString()}/mo
+                ${Number(listing.monthly_rent).toLocaleString()}/mo
               </div>
             ))}
             {listings.length > 5 && (
@@ -228,7 +228,7 @@ export function PropertyMap({
             <div className="flex">
               <div className="relative w-24 h-24 shrink-0">
                 <Image
-                  src={hoveredListing.image}
+                  src={hoveredListing.images?.find((i) => i.is_primary)?.url ?? hoveredListing.images?.[0]?.url ?? "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=200&h=200&fit=crop"}
                   alt={hoveredListing.title}
                   fill
                   className="object-cover"
@@ -238,7 +238,7 @@ export function PropertyMap({
               </div>
               <div className="p-3 flex-1">
                 <div className="font-bold text-white">
-                  ${hoveredListing.price.toLocaleString()}/mo
+                  ${Number(hoveredListing.monthly_rent).toLocaleString()}/mo
                 </div>
                 <div className="text-sm text-slate-200 line-clamp-1">
                   {hoveredListing.title}
@@ -248,11 +248,10 @@ export function PropertyMap({
                   {hoveredListing.neighborhood}
                 </div>
                 <div className="flex gap-2 mt-2 text-xs text-slate-400">
-                  <span>{hoveredListing.beds} bd</span>
+                  <span>{hoveredListing.bedrooms} bd</span>
                   <span>|</span>
-                  <span>{hoveredListing.baths} ba</span>
-                  <span>|</span>
-                  <span>{hoveredListing.sqft} sqft</span>
+                  <span>{parseFloat(hoveredListing.bathrooms)} ba</span>
+                  {hoveredListing.square_feet && <><span>|</span><span>{hoveredListing.square_feet} sqft</span></>}
                 </div>
               </div>
             </div>

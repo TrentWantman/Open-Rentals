@@ -15,12 +15,13 @@ A self-hostable rental listing platform. Ships with landlord identity verificati
 ```bash
 cp .env.example .env
 cp backend/.env.example backend/.env
-# Fill in SECRET_KEY — everything else is optional
+cp frontend/.env.example frontend/.env.local
+# Fill in the required keys below, then:
 
 docker-compose up -d
 
-# First run only: apply migrations
-docker-compose exec backend alembic upgrade head
+# Seed demo data (first run only)
+docker-compose exec backend python seed.py
 ```
 
 - Frontend: http://localhost:3000
@@ -65,6 +66,24 @@ frontend/
     lib/            # API client, auth context
 ```
 
-## Environment variables
+## API keys
 
-See `.env.example` and `backend/.env.example`. Required: `SECRET_KEY`, `DATABASE_URL`. Everything else (Mapbox, Cloudinary, Stripe, SMTP) is optional — the app runs without them with those features disabled.
+### Required
+| Key | Where | Notes |
+|-----|-------|-------|
+| `SECRET_KEY` | `backend/.env` | Any long random string — used for JWT signing |
+| `DATABASE_URL` | `backend/.env` | Set automatically by docker-compose |
+
+### Required for the map view
+| Key | Where | How to get |
+|-----|-------|-----------|
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | `frontend/.env.local` | [account.mapbox.com](https://account.mapbox.com/access-tokens/) — free tier is sufficient |
+
+### Optional (features degrade gracefully without them)
+| Key | Feature | Where to get |
+|-----|---------|-------------|
+| `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | Property photo uploads | [cloudinary.com](https://cloudinary.com) — free tier |
+| `SMTP_HOST` / `SMTP_USER` / `SMTP_PASSWORD` | Email notifications (verification, password reset) | Any SMTP provider (Gmail, SendGrid, Resend, etc.) |
+| `GOOGLE_MAPS_API_KEY` | Address autocomplete | [Google Cloud Console](https://console.cloud.google.com) — Maps JavaScript API |
+
+The app runs without Cloudinary, SMTP, and Google Maps — those features are simply disabled or fall back gracefully.

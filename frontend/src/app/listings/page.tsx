@@ -84,7 +84,7 @@ function ListingsPageContent() {
           limit: 50,
         });
         if (!cancelled) {
-          setListings(result.data ?? []);
+          setListings(result.items ?? []);
           setTotalCount(result.total ?? 0);
         }
       } catch {
