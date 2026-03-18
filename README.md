@@ -25,7 +25,8 @@ docker-compose exec backend python seed.py
 ```
 
 - Frontend: http://localhost:3000
-- API + docs: http://localhost:8000/docs
+- API docs: http://localhost:8000/docs
+- [**Browse the API spec online**](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/TrentWantman/Open-Rentals/main/docs/openapi.json) — no setup required
 
 ## Features
 

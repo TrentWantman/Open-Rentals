@@ -1,0 +1,4810 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Open Rentals",
+        "description": "API for open rental platform with property listings and applications",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/health": {
+            "get": {
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health Check",
+                "description": "Health check endpoint for container orchestration and load balancers.\n\nReturns:\n    dict: Health status with service availability information",
+                "operationId": "health_check_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Health Check Health Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "tags": [
+                    "Root"
+                ],
+                "summary": "Root",
+                "description": "Root endpoint with API information.",
+                "operationId": "root__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Root  Get"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register",
+                "description": "Register a new user.\n\n- **email**: Unique email address\n- **password**: Minimum 8 characters with uppercase and digit\n- **first_name**: User's first name\n- **last_name**: User's last name\n- **role**: User role (renter, landlord)",
+                "operationId": "register_api_v1_auth_register_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login",
+                "description": "Authenticate user and return JWT tokens.\n\nUses OAuth2 password flow. Provide username (email) and password.",
+                "operationId": "login_api_v1_auth_login_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_login_api_v1_auth_login_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login/json": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login Json",
+                "description": "Authenticate user with JSON body and return JWT tokens.\n\nAlternative to OAuth2 form login.",
+                "operationId": "login_json_api_v1_auth_login_json_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh Token",
+                "description": "Refresh access token using a valid refresh token.",
+                "operationId": "refresh_token_api_v1_auth_refresh_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshTokenRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get Current User Info",
+                "description": "Get current authenticated user's information.",
+                "operationId": "get_current_user_info_api_v1_auth_me_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Forgot Password",
+                "description": "Request a password reset email.\n\nIf the email exists in the system, a password reset link will be sent.\nFor security, we always return success even if email doesn't exist.",
+                "operationId": "forgot_password_api_v1_auth_forgot_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForgotPasswordRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Reset Password",
+                "description": "Reset password using a valid reset token.",
+                "operationId": "reset_password_api_v1_auth_reset_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetPasswordRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/me": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get My Profile",
+                "description": "Get current user's full profile.",
+                "operationId": "get_my_profile_api_v1_users_me_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update My Profile",
+                "description": "Update current user's profile.\n\nAll fields are optional - only provided fields will be updated.",
+                "operationId": "update_my_profile_api_v1_users_me_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update My Profile",
+                "description": "Update current user's profile.\n\nAll fields are optional - only provided fields will be updated.",
+                "operationId": "update_my_profile_api_v1_users_me_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/me/password": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Change Password",
+                "description": "Change current user's password.\n\nRequires current password for verification.",
+                "operationId": "change_password_api_v1_users_me_password_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserPasswordUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/users/{user_id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get User Public Profile",
+                "description": "Get a user's public profile.\n\nReturns limited information suitable for public display.",
+                "operationId": "get_user_public_profile_api_v1_users__user_id__get",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserPublicResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List Users",
+                "description": "List all users (admin only).\n\nSupports filtering by role and active status.",
+                "operationId": "list_users_api_v1_users__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "default": 0,
+                            "title": "Skip"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Limit"
+                        }
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/UserRole"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Role"
+                        }
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Is Active"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserResponse"
+                                    },
+                                    "title": "Response List Users Api V1 Users  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{user_id}/admin": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get User Admin",
+                "description": "Get full user details (admin only).",
+                "operationId": "get_user_admin_api_v1_users__user_id__admin_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update User Admin",
+                "description": "Update any user's profile (admin only).",
+                "operationId": "update_user_admin_api_v1_users__user_id__admin_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{user_id}/deactivate": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Deactivate User",
+                "description": "Deactivate a user account (admin only).",
+                "operationId": "deactivate_user_api_v1_users__user_id__deactivate_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{user_id}/activate": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Activate User",
+                "description": "Activate a user account (admin only).",
+                "operationId": "activate_user_api_v1_users__user_id__activate_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/{user_id}/verify-landlord": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Verify Landlord",
+                "description": "Mark a landlord as verified (admin only).\n\nThis is a key anti-fraud feature.",
+                "operationId": "verify_landlord_api_v1_users__user_id__verify_landlord_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/": {
+            "post": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Create Property",
+                "description": "Create a new property listing.\n\nRequires landlord or admin role.",
+                "operationId": "create_property_api_v1_properties__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PropertyCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "List Properties",
+                "description": "List and search properties with filters.\n\nSupports:\n- Geo-search within radius using PostGIS\n- Price, bedroom, bathroom filters\n- Property type and neighborhood filters\n- Sorting by price, date, or distance\n- Pagination",
+                "operationId": "list_properties_api_v1_properties__get",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Page Size"
+                        }
+                    },
+                    {
+                        "name": "latitude",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "maximum": 90.0,
+                                    "minimum": -90.0
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Latitude"
+                        }
+                    },
+                    {
+                        "name": "longitude",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "maximum": 180.0,
+                                    "minimum": -180.0
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Longitude"
+                        }
+                    },
+                    {
+                        "name": "radius_miles",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "maximum": 100.0,
+                                    "minimum": 0.1
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Radius Miles"
+                        }
+                    },
+                    {
+                        "name": "min_price",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "minimum": 0.0
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Min Price"
+                        }
+                    },
+                    {
+                        "name": "max_price",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "minimum": 0.0
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Max Price"
+                        }
+                    },
+                    {
+                        "name": "min_bedrooms",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Min Bedrooms"
+                        }
+                    },
+                    {
+                        "name": "max_bedrooms",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Max Bedrooms"
+                        }
+                    },
+                    {
+                        "name": "min_bathrooms",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "minimum": 0.0
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Min Bathrooms"
+                        }
+                    },
+                    {
+                        "name": "max_bathrooms",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "number",
+                                    "minimum": 0.0
+                                },
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Max Bathrooms"
+                        }
+                    },
+                    {
+                        "name": "property_type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/PropertyType"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Property Type"
+                        }
+                    },
+                    {
+                        "name": "neighborhood",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Neighborhood"
+                        }
+                    },
+                    {
+                        "name": "pets_allowed",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Pets Allowed"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^(price|created_at|distance)$",
+                            "default": "created_at",
+                            "title": "Sort By"
+                        }
+                    },
+                    {
+                        "name": "sort_order",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^(asc|desc)$",
+                            "default": "desc",
+                            "title": "Sort Order"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/my-listings": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get My Listings",
+                "description": "Get current landlord's property listings.",
+                "operationId": "get_my_listings_api_v1_properties_my_listings_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Page Size"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/PropertyStatus"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/{property_id}": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get Property",
+                "description": "Get a single property by ID.\n\nIncrements view count for active properties.",
+                "operationId": "get_property_api_v1_properties__property_id__get",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Update Property",
+                "description": "Update a property listing.\n\nOnly the property owner or an admin can update.",
+                "operationId": "update_property_api_v1_properties__property_id__patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PropertyUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Update Property",
+                "description": "Update a property listing.\n\nOnly the property owner or an admin can update.",
+                "operationId": "update_property_api_v1_properties__property_id__put",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PropertyUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Delete Property",
+                "description": "Delete a property listing.\n\nOnly the property owner or an admin can delete.",
+                "operationId": "delete_property_api_v1_properties__property_id__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/slug/{slug}": {
+            "get": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Get Property By Slug",
+                "description": "Get a single property by slug.\n\nThe slug must be lowercase alphanumeric characters and hyphens only.",
+                "operationId": "get_property_by_slug_api_v1_properties_slug__slug__get",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300,
+                            "pattern": "^[a-z0-9\\-]+$",
+                            "title": "Slug"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/{property_id}/publish": {
+            "post": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Publish Property",
+                "description": "Publish a draft property (set status to pending_review or active).",
+                "operationId": "publish_property_api_v1_properties__property_id__publish_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/{property_id}/images": {
+            "post": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Add Property Image",
+                "description": "Add an image to a property.",
+                "operationId": "add_property_image_api_v1_properties__property_id__images_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PropertyImageCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyImageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/{property_id}/images/{image_id}": {
+            "delete": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Delete Property Image",
+                "description": "Delete an image from a property.",
+                "operationId": "delete_property_image_api_v1_properties__property_id__images__image_id__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    },
+                    {
+                        "name": "image_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Image Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/{property_id}/verify": {
+            "post": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Verify Property",
+                "description": "Verify a property listing (admin only).",
+                "operationId": "verify_property_api_v1_properties__property_id__verify_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/properties/{property_id}/approve": {
+            "post": {
+                "tags": [
+                    "Properties"
+                ],
+                "summary": "Approve Property",
+                "description": "Approve a pending property (set to active) - admin only.",
+                "operationId": "approve_property_api_v1_properties__property_id__approve_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PropertyResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/applications/": {
+            "get": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "List Applications",
+                "description": "List applications based on user role.\n\n- Renters see their own submitted applications\n- Landlords see applications received for their properties\n- Admins see all applications",
+                "operationId": "list_applications_api_v1_applications__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Page Size"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/ApplicationStatus"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    },
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Create Application",
+                "description": "Submit a rental application for a property.\n\n- Applicant cannot apply to their own property\n- Cannot apply to inactive properties\n- Cannot apply twice to the same property",
+                "operationId": "create_application_api_v1_applications__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ApplicationCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/applications/my-applications": {
+            "get": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Get My Applications",
+                "description": "Get current user's submitted applications.",
+                "operationId": "get_my_applications_api_v1_applications_my_applications_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Page Size"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/ApplicationStatus"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/applications/received": {
+            "get": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Get Received Applications",
+                "description": "Get applications received for landlord's properties.",
+                "operationId": "get_received_applications_api_v1_applications_received_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Page Size"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/ApplicationStatus"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    },
+                    {
+                        "name": "property_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Property Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/applications/{application_id}": {
+            "get": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Get Application",
+                "description": "Get a single application by ID.\n\nAccessible by the applicant or the property owner.",
+                "operationId": "get_application_api_v1_applications__application_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "application_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Application Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Update Application",
+                "description": "Update an application (by the applicant only).\n\nCan only update pending or under_review applications.",
+                "operationId": "update_application_api_v1_applications__application_id__patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "application_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Application Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ApplicationUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Delete Application",
+                "description": "Delete an application (by the applicant, only if withdrawn).",
+                "operationId": "delete_application_api_v1_applications__application_id__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "application_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Application Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/applications/{application_id}/status": {
+            "post": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Update Application Status",
+                "description": "Update application status (by landlord).\n\nLandlord can:\n- Move to under_review\n- Approve or deny the application",
+                "operationId": "update_application_status_api_v1_applications__application_id__status_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "application_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Application Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ApplicationStatusUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Update Application Status",
+                "description": "Update application status (by landlord).\n\nLandlord can:\n- Move to under_review\n- Approve or deny the application",
+                "operationId": "update_application_status_api_v1_applications__application_id__status_put",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "application_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Application Id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ApplicationStatusUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/applications/{application_id}/withdraw": {
+            "post": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Withdraw Application",
+                "description": "Withdraw an application (by the applicant).",
+                "operationId": "withdraw_application_api_v1_applications__application_id__withdraw_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "application_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Application Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/applications/property/{property_id}": {
+            "get": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Get Property Applications",
+                "description": "Get all applications for a specific property (landlord only).",
+                "operationId": "get_property_applications_api_v1_applications_property__property_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "title": "Property Id"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 20,
+                            "title": "Page Size"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#/components/schemas/ApplicationStatus"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Status"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApplicationListResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ApplicationCreate": {
+                "properties": {
+                    "employment_status": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Employment Status"
+                    },
+                    "employer_name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 200
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Employer Name"
+                    },
+                    "annual_income": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Annual Income"
+                    },
+                    "desired_move_in": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Desired Move In"
+                    },
+                    "desired_lease_term": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 60.0,
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Desired Lease Term"
+                    },
+                    "num_occupants": {
+                        "type": "integer",
+                        "maximum": 20.0,
+                        "minimum": 1.0,
+                        "title": "Num Occupants",
+                        "default": 1
+                    },
+                    "has_pets": {
+                        "type": "boolean",
+                        "title": "Has Pets",
+                        "default": false
+                    },
+                    "pet_details": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Pet Details"
+                    },
+                    "cover_letter": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Cover Letter"
+                    },
+                    "property_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Property Id"
+                    },
+                    "references": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/ReferenceInfo"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "References"
+                    },
+                    "documents": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/DocumentInfo"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Documents"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "property_id"
+                ],
+                "title": "ApplicationCreate",
+                "description": "Schema for creating a rental application."
+            },
+            "ApplicationListResponse": {
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/ApplicationResponse"
+                        },
+                        "type": "array",
+                        "title": "Items"
+                    },
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "title": "Page"
+                    },
+                    "page_size": {
+                        "type": "integer",
+                        "title": "Page Size"
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "title": "Pages"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "page_size",
+                    "pages"
+                ],
+                "title": "ApplicationListResponse",
+                "description": "Paginated list of applications."
+            },
+            "ApplicationResponse": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "property_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Property Id"
+                    },
+                    "applicant_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Applicant Id"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/ApplicationStatus"
+                    },
+                    "employment_status": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Employment Status"
+                    },
+                    "employer_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Employer Name"
+                    },
+                    "annual_income": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Annual Income"
+                    },
+                    "desired_move_in": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Desired Move In"
+                    },
+                    "desired_lease_term": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Desired Lease Term"
+                    },
+                    "num_occupants": {
+                        "type": "integer",
+                        "title": "Num Occupants"
+                    },
+                    "has_pets": {
+                        "type": "boolean",
+                        "title": "Has Pets"
+                    },
+                    "pet_details": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Pet Details"
+                    },
+                    "cover_letter": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Cover Letter"
+                    },
+                    "references": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "References"
+                    },
+                    "documents": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Documents"
+                    },
+                    "screening_report_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Screening Report Id"
+                    },
+                    "screening_status": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Screening Status"
+                    },
+                    "landlord_notes": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Landlord Notes"
+                    },
+                    "reviewed_at": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Reviewed At"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "property_id",
+                    "applicant_id",
+                    "status",
+                    "employment_status",
+                    "employer_name",
+                    "annual_income",
+                    "desired_move_in",
+                    "desired_lease_term",
+                    "num_occupants",
+                    "has_pets",
+                    "pet_details",
+                    "cover_letter",
+                    "references",
+                    "documents",
+                    "screening_report_id",
+                    "screening_status",
+                    "landlord_notes",
+                    "reviewed_at",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "ApplicationResponse",
+                "description": "Schema for application response."
+            },
+            "ApplicationStatus": {
+                "type": "string",
+                "enum": [
+                    "pending",
+                    "under_review",
+                    "approved",
+                    "denied",
+                    "withdrawn"
+                ],
+                "title": "ApplicationStatus"
+            },
+            "ApplicationStatusUpdate": {
+                "properties": {
+                    "status": {
+                        "$ref": "#/components/schemas/ApplicationStatus"
+                    },
+                    "landlord_notes": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Landlord Notes"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "status"
+                ],
+                "title": "ApplicationStatusUpdate",
+                "description": "Schema for landlord updating application status."
+            },
+            "ApplicationUpdate": {
+                "properties": {
+                    "employment_status": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Employment Status"
+                    },
+                    "employer_name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 200
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Employer Name"
+                    },
+                    "annual_income": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Annual Income"
+                    },
+                    "desired_move_in": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Desired Move In"
+                    },
+                    "desired_lease_term": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 60.0,
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Desired Lease Term"
+                    },
+                    "num_occupants": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 20.0,
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Num Occupants"
+                    },
+                    "has_pets": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Has Pets"
+                    },
+                    "pet_details": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Pet Details"
+                    },
+                    "cover_letter": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Cover Letter"
+                    },
+                    "references": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/ReferenceInfo"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "References"
+                    },
+                    "documents": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/DocumentInfo"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Documents"
+                    }
+                },
+                "type": "object",
+                "title": "ApplicationUpdate",
+                "description": "Schema for updating a rental application (by applicant)."
+            },
+            "Body_login_api_v1_auth_login_post": {
+                "properties": {
+                    "grant_type": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "password"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Grant Type"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "title": "Scope",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Id"
+                    },
+                    "client_secret": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Secret"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "title": "Body_login_api_v1_auth_login_post"
+            },
+            "DocumentInfo": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "title": "Type"
+                    },
+                    "url": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "title": "Url"
+                    },
+                    "uploaded_at": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Uploaded At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "type",
+                    "url"
+                ],
+                "title": "DocumentInfo",
+                "description": "Document information."
+            },
+            "ForgotPasswordRequest": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email"
+                ],
+                "title": "ForgotPasswordRequest",
+                "description": "Request to initiate password reset."
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "LocationInput": {
+                "properties": {
+                    "latitude": {
+                        "type": "number",
+                        "maximum": 90.0,
+                        "minimum": -90.0,
+                        "title": "Latitude"
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "maximum": 180.0,
+                        "minimum": -180.0,
+                        "title": "Longitude"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "latitude",
+                    "longitude"
+                ],
+                "title": "LocationInput",
+                "description": "Geographic coordinates input."
+            },
+            "LocationOutput": {
+                "properties": {
+                    "latitude": {
+                        "type": "number",
+                        "title": "Latitude"
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "title": "Longitude"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "latitude",
+                    "longitude"
+                ],
+                "title": "LocationOutput",
+                "description": "Geographic coordinates output."
+            },
+            "LoginRequest": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "title": "LoginRequest",
+                "description": "Login request schema."
+            },
+            "MessageResponse": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "title": "Message"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "message"
+                ],
+                "title": "MessageResponse",
+                "description": "Simple message response."
+            },
+            "PropertyCreate": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 200,
+                        "minLength": 5,
+                        "title": "Title"
+                    },
+                    "description": {
+                        "type": "string",
+                        "minLength": 20,
+                        "title": "Description"
+                    },
+                    "property_type": {
+                        "$ref": "#/components/schemas/PropertyType"
+                    },
+                    "address": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "title": "Address"
+                    },
+                    "unit_number": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 20
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Unit Number"
+                    },
+                    "city": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "title": "City",
+                        "default": "Miami"
+                    },
+                    "state": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "title": "State",
+                        "default": "FL"
+                    },
+                    "zip_code": {
+                        "type": "string",
+                        "maxLength": 10,
+                        "pattern": "^\\d{5}(-\\d{4})?$",
+                        "title": "Zip Code"
+                    },
+                    "neighborhood": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Neighborhood"
+                    },
+                    "monthly_rent": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Monthly Rent"
+                    },
+                    "security_deposit": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Security Deposit"
+                    },
+                    "application_fee": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Application Fee"
+                    },
+                    "bedrooms": {
+                        "type": "integer",
+                        "maximum": 20.0,
+                        "minimum": 0.0,
+                        "title": "Bedrooms"
+                    },
+                    "bathrooms": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 20.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "Bathrooms"
+                    },
+                    "square_feet": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Square Feet"
+                    },
+                    "year_built": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 2100.0,
+                                "minimum": 1800.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Year Built"
+                    },
+                    "amenities": {
+                        "anyOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Amenities"
+                    },
+                    "pets_allowed": {
+                        "type": "boolean",
+                        "title": "Pets Allowed",
+                        "default": false
+                    },
+                    "pet_deposit": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Pet Deposit"
+                    },
+                    "smoking_allowed": {
+                        "type": "boolean",
+                        "title": "Smoking Allowed",
+                        "default": false
+                    },
+                    "available_date": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Available Date"
+                    },
+                    "lease_term_months": {
+                        "type": "integer",
+                        "maximum": 60.0,
+                        "minimum": 1.0,
+                        "title": "Lease Term Months",
+                        "default": 12
+                    },
+                    "location": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/LocationInput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "images": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/PropertyImageCreate"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Images"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "title",
+                    "description",
+                    "property_type",
+                    "address",
+                    "zip_code",
+                    "monthly_rent",
+                    "bedrooms",
+                    "bathrooms"
+                ],
+                "title": "PropertyCreate",
+                "description": "Schema for creating a property."
+            },
+            "PropertyImageCreate": {
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "title": "Url"
+                    },
+                    "thumbnail_url": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 500
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Thumbnail Url"
+                    },
+                    "caption": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 200
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Caption"
+                    },
+                    "is_primary": {
+                        "type": "boolean",
+                        "title": "Is Primary",
+                        "default": false
+                    },
+                    "order": {
+                        "type": "integer",
+                        "title": "Order",
+                        "default": 0
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "url"
+                ],
+                "title": "PropertyImageCreate",
+                "description": "Schema for creating property image."
+            },
+            "PropertyImageResponse": {
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "title": "Url"
+                    },
+                    "thumbnail_url": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 500
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Thumbnail Url"
+                    },
+                    "caption": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 200
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Caption"
+                    },
+                    "is_primary": {
+                        "type": "boolean",
+                        "title": "Is Primary",
+                        "default": false
+                    },
+                    "order": {
+                        "type": "integer",
+                        "title": "Order",
+                        "default": 0
+                    },
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "property_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Property Id"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "url",
+                    "id",
+                    "property_id",
+                    "created_at"
+                ],
+                "title": "PropertyImageResponse",
+                "description": "Schema for property image response."
+            },
+            "PropertyListResponse": {
+                "properties": {
+                    "items": {
+                        "items": {
+                            "$ref": "#/components/schemas/PropertyResponse"
+                        },
+                        "type": "array",
+                        "title": "Items"
+                    },
+                    "total": {
+                        "type": "integer",
+                        "title": "Total"
+                    },
+                    "page": {
+                        "type": "integer",
+                        "title": "Page"
+                    },
+                    "page_size": {
+                        "type": "integer",
+                        "title": "Page Size"
+                    },
+                    "pages": {
+                        "type": "integer",
+                        "title": "Pages"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "items",
+                    "total",
+                    "page",
+                    "page_size",
+                    "pages"
+                ],
+                "title": "PropertyListResponse",
+                "description": "Paginated list of properties."
+            },
+            "PropertyResponse": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "landlord_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Landlord Id"
+                    },
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "title": "Slug"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "property_type": {
+                        "$ref": "#/components/schemas/PropertyType"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/PropertyStatus"
+                    },
+                    "address": {
+                        "type": "string",
+                        "title": "Address"
+                    },
+                    "unit_number": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Unit Number"
+                    },
+                    "city": {
+                        "type": "string",
+                        "title": "City"
+                    },
+                    "state": {
+                        "type": "string",
+                        "title": "State"
+                    },
+                    "zip_code": {
+                        "type": "string",
+                        "title": "Zip Code"
+                    },
+                    "neighborhood": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Neighborhood"
+                    },
+                    "location": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/LocationOutput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "monthly_rent": {
+                        "type": "string",
+                        "title": "Monthly Rent"
+                    },
+                    "security_deposit": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Security Deposit"
+                    },
+                    "application_fee": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Application Fee"
+                    },
+                    "bedrooms": {
+                        "type": "integer",
+                        "title": "Bedrooms"
+                    },
+                    "bathrooms": {
+                        "type": "string",
+                        "title": "Bathrooms"
+                    },
+                    "square_feet": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Square Feet"
+                    },
+                    "year_built": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Year Built"
+                    },
+                    "amenities": {
+                        "anyOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Amenities"
+                    },
+                    "pets_allowed": {
+                        "type": "boolean",
+                        "title": "Pets Allowed"
+                    },
+                    "pet_deposit": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Pet Deposit"
+                    },
+                    "smoking_allowed": {
+                        "type": "boolean",
+                        "title": "Smoking Allowed"
+                    },
+                    "available_date": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Available Date"
+                    },
+                    "lease_term_months": {
+                        "type": "integer",
+                        "title": "Lease Term Months"
+                    },
+                    "is_verified": {
+                        "type": "boolean",
+                        "title": "Is Verified"
+                    },
+                    "verified_at": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Verified At"
+                    },
+                    "view_count": {
+                        "type": "integer",
+                        "title": "View Count"
+                    },
+                    "inquiry_count": {
+                        "type": "integer",
+                        "title": "Inquiry Count"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At"
+                    },
+                    "images": {
+                        "items": {
+                            "$ref": "#/components/schemas/PropertyImageResponse"
+                        },
+                        "type": "array",
+                        "title": "Images",
+                        "default": []
+                    },
+                    "distance_miles": {
+                        "anyOf": [
+                            {
+                                "type": "number"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Distance Miles"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "landlord_id",
+                    "title",
+                    "slug",
+                    "description",
+                    "property_type",
+                    "status",
+                    "address",
+                    "unit_number",
+                    "city",
+                    "state",
+                    "zip_code",
+                    "neighborhood",
+                    "monthly_rent",
+                    "security_deposit",
+                    "application_fee",
+                    "bedrooms",
+                    "bathrooms",
+                    "square_feet",
+                    "year_built",
+                    "amenities",
+                    "pets_allowed",
+                    "pet_deposit",
+                    "smoking_allowed",
+                    "available_date",
+                    "lease_term_months",
+                    "is_verified",
+                    "verified_at",
+                    "view_count",
+                    "inquiry_count",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "PropertyResponse",
+                "description": "Schema for property response."
+            },
+            "PropertyStatus": {
+                "type": "string",
+                "enum": [
+                    "draft",
+                    "pending_review",
+                    "active",
+                    "rented",
+                    "inactive"
+                ],
+                "title": "PropertyStatus"
+            },
+            "PropertyType": {
+                "type": "string",
+                "enum": [
+                    "apartment",
+                    "condo",
+                    "house",
+                    "townhouse",
+                    "studio",
+                    "room"
+                ],
+                "title": "PropertyType"
+            },
+            "PropertyUpdate": {
+                "properties": {
+                    "title": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 200,
+                                "minLength": 5
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Title"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "minLength": 20
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description"
+                    },
+                    "property_type": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/PropertyType"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "status": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/PropertyStatus"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "address": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 300
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Address"
+                    },
+                    "unit_number": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 20
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Unit Number"
+                    },
+                    "city": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "City"
+                    },
+                    "state": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 50
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "State"
+                    },
+                    "zip_code": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 10,
+                                "pattern": "^\\d{5}(-\\d{4})?$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Zip Code"
+                    },
+                    "neighborhood": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Neighborhood"
+                    },
+                    "location": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/LocationInput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "monthly_rent": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Monthly Rent"
+                    },
+                    "security_deposit": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Security Deposit"
+                    },
+                    "application_fee": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Application Fee"
+                    },
+                    "bedrooms": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 20.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bedrooms"
+                    },
+                    "bathrooms": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "maximum": 20.0,
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bathrooms"
+                    },
+                    "square_feet": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Square Feet"
+                    },
+                    "year_built": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 2100.0,
+                                "minimum": 1800.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Year Built"
+                    },
+                    "amenities": {
+                        "anyOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Amenities"
+                    },
+                    "pets_allowed": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Pets Allowed"
+                    },
+                    "pet_deposit": {
+                        "anyOf": [
+                            {
+                                "type": "number",
+                                "minimum": 0.0
+                            },
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Pet Deposit"
+                    },
+                    "smoking_allowed": {
+                        "anyOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Smoking Allowed"
+                    },
+                    "available_date": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Available Date"
+                    },
+                    "lease_term_months": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 60.0,
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Lease Term Months"
+                    }
+                },
+                "type": "object",
+                "title": "PropertyUpdate",
+                "description": "Schema for updating a property."
+            },
+            "ReferenceInfo": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "title": "Name"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "maxLength": 20,
+                        "title": "Phone"
+                    },
+                    "relationship": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "title": "Relationship"
+                    },
+                    "email": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Email"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "phone",
+                    "relationship"
+                ],
+                "title": "ReferenceInfo",
+                "description": "Reference information."
+            },
+            "RefreshTokenRequest": {
+                "properties": {
+                    "refresh_token": {
+                        "type": "string",
+                        "title": "Refresh Token"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "refresh_token"
+                ],
+                "title": "RefreshTokenRequest",
+                "description": "Request to refresh access token."
+            },
+            "ResetPasswordRequest": {
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "title": "Token"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "minLength": 8,
+                        "title": "New Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "token",
+                    "new_password"
+                ],
+                "title": "ResetPasswordRequest",
+                "description": "Request to reset password with token."
+            },
+            "Token": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                    },
+                    "refresh_token": {
+                        "type": "string",
+                        "title": "Refresh Token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "title": "Token Type",
+                        "default": "bearer"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "title": "Expires In"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "access_token",
+                    "refresh_token",
+                    "expires_in"
+                ],
+                "title": "Token",
+                "description": "JWT token response."
+            },
+            "UserCreate": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "title": "Last Name"
+                    },
+                    "phone": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 20
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone"
+                    },
+                    "password": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "minLength": 8,
+                        "title": "Password"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/UserRole",
+                        "default": "renter"
+                    },
+                    "company_name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 200
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Company Name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email",
+                    "first_name",
+                    "last_name",
+                    "password"
+                ],
+                "title": "UserCreate",
+                "description": "Schema for user registration."
+            },
+            "UserPasswordUpdate": {
+                "properties": {
+                    "current_password": {
+                        "type": "string",
+                        "title": "Current Password"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "maxLength": 128,
+                        "minLength": 8,
+                        "title": "New Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "current_password",
+                    "new_password"
+                ],
+                "title": "UserPasswordUpdate",
+                "description": "Schema for password change."
+            },
+            "UserPublicResponse": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "title": "Last Name"
+                    },
+                    "avatar_url": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Avatar Url"
+                    },
+                    "bio": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bio"
+                    },
+                    "is_landlord_verified": {
+                        "type": "boolean",
+                        "title": "Is Landlord Verified"
+                    },
+                    "company_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Company Name"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "first_name",
+                    "last_name",
+                    "avatar_url",
+                    "bio",
+                    "is_landlord_verified",
+                    "company_name",
+                    "created_at"
+                ],
+                "title": "UserPublicResponse",
+                "description": "Public user info (for landlord profiles, etc.)."
+            },
+            "UserResponse": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "title": "Id"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "title": "Last Name"
+                    },
+                    "phone": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone"
+                    },
+                    "avatar_url": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Avatar Url"
+                    },
+                    "bio": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bio"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/UserRole"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "title": "Is Active"
+                    },
+                    "is_verified": {
+                        "type": "boolean",
+                        "title": "Is Verified"
+                    },
+                    "email_verified": {
+                        "type": "boolean",
+                        "title": "Email Verified"
+                    },
+                    "is_landlord_verified": {
+                        "type": "boolean",
+                        "title": "Is Landlord Verified"
+                    },
+                    "company_name": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Company Name"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At"
+                    },
+                    "last_login": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Last Login"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "email",
+                    "first_name",
+                    "last_name",
+                    "phone",
+                    "avatar_url",
+                    "bio",
+                    "role",
+                    "is_active",
+                    "is_verified",
+                    "email_verified",
+                    "is_landlord_verified",
+                    "company_name",
+                    "created_at",
+                    "updated_at",
+                    "last_login"
+                ],
+                "title": "UserResponse",
+                "description": "Schema for user response."
+            },
+            "UserRole": {
+                "type": "string",
+                "enum": [
+                    "renter",
+                    "landlord",
+                    "admin"
+                ],
+                "title": "UserRole"
+            },
+            "UserUpdate": {
+                "properties": {
+                    "first_name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100,
+                                "minLength": 1
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "First Name"
+                    },
+                    "last_name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 100,
+                                "minLength": 1
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Last Name"
+                    },
+                    "phone": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 20
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Phone"
+                    },
+                    "avatar_url": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 500
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Avatar Url"
+                    },
+                    "bio": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Bio"
+                    },
+                    "company_name": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "maxLength": 200
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Company Name"
+                    }
+                },
+                "type": "object",
+                "title": "UserUpdate",
+                "description": "Schema for updating user profile."
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "/api/v1/auth/login"
+                    }
+                }
+            }
+        }
+    }
+}
