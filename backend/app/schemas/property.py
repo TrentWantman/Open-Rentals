@@ -53,8 +53,8 @@ class PropertyBase(BaseModel):
     # Location
     address: str = Field(..., max_length=300)
     unit_number: Optional[str] = Field(None, max_length=20)
-    city: str = Field(default="Miami", max_length=100)
-    state: str = Field(default="FL", max_length=50)
+    city: str = Field(..., max_length=100)
+    state: str = Field(..., max_length=50)
     zip_code: str = Field(..., max_length=10, pattern=r"^\d{5}(-\d{4})?$")
     neighborhood: Optional[str] = Field(None, max_length=100)
 

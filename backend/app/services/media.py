@@ -50,7 +50,7 @@ class MediaService:
             # Upload to Cloudinary with transformations
             result = cloudinary.uploader.upload(
                 contents,
-                folder=f"miami-rentals/properties/{property_id}",
+                folder=f"open-rentals/properties/{property_id}",
                 public_id=str(uuid.uuid4()),
                 resource_type="image",
                 transformation=[
@@ -107,7 +107,7 @@ class MediaService:
         try:
             result = cloudinary.uploader.upload(
                 contents,
-                folder="miami-rentals/avatars",
+                folder="open-rentals/avatars",
                 public_id=str(user_id),
                 resource_type="image",
                 overwrite=True,
@@ -158,7 +158,7 @@ class MediaService:
 
             result = cloudinary.uploader.upload(
                 contents,
-                folder=f"miami-rentals/documents/{user_id}",
+                folder=f"open-rentals/documents/{user_id}",
                 public_id=f"{doc_type}_{uuid.uuid4()}",
                 resource_type=resource_type,
             )

@@ -261,7 +261,7 @@ async def health_check() -> dict:
     """
     health_status = {
         "status": "healthy",
-        "service": "miami-rental-api",
+        "service": "open-rentals-api",
         "version": settings.APP_VERSION,
     }
 

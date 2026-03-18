@@ -1,4 +1,4 @@
-# Backend Dockerfile for Miami Rental Platform
+# Backend Dockerfile for Open Rentals
 FROM python:3.12-slim
 
 # Set environment variables

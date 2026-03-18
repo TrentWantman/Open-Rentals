@@ -62,7 +62,7 @@ class EmailService:
             </div>
             <div style="padding: 30px 20px;">
                 <h2>Welcome, {first_name}!</h2>
-                <p>Thank you for joining Open Rentals - the trusted platform for verified rental listings in Miami.</p>
+                <p>Thank you for joining Open Rentals - the open source platform for verified rental listings.</p>
                 <p>Here's what you can do:</p>
                 <ul>
                     <li>Browse verified rental listings</li>

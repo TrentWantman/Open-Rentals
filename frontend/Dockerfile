@@ -1,4 +1,4 @@
-# Frontend Dockerfile for Miami Rental Platform
+# Frontend Dockerfile for Open Rentals
 # Multi-stage build for optimized production image
 
 # ============================================
