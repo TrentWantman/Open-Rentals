@@ -36,7 +36,7 @@ docker-compose exec backend python seed.py
 - Separate dashboards for renters and landlords
 - Email notifications for applications and verification status
 
-## Screenshots
+## Example - Miami
 
 | Listings | Listing Detail |
 |----------|---------------|
