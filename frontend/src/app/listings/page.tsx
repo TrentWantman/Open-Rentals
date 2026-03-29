@@ -46,6 +46,7 @@ function ListingsPageContent() {
   const router = useRouter();
   const [view, setView] = useState<"grid" | "map">("grid");
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +68,11 @@ function ListingsPageContent() {
     };
   });
 
-  // Fetch listings from API
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => clearTimeout(id);
+  }, [searchQuery]);
+
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
@@ -75,7 +80,7 @@ function ListingsPageContent() {
     const fetchListings = async () => {
       try {
         const result = await propertiesApi.list({
-          q: searchQuery || undefined,
+          q: debouncedQuery || undefined,
           minPrice: filters.priceMin ?? undefined,
           maxPrice: filters.priceMax ?? undefined,
           beds: filters.beds ?? undefined,
@@ -96,7 +101,7 @@ function ListingsPageContent() {
 
     fetchListings();
     return () => { cancelled = true; };
-  }, [searchQuery, filters]);
+  }, [debouncedQuery, filters]);
 
   // Derive unique neighborhoods from results for the filter sidebar
   const availableNeighborhoods = useMemo(() => {
@@ -128,11 +133,11 @@ function ListingsPageContent() {
   const closeMobileFilters = useCallback(() => setShowMobileFilters(false), []);
 
   const pageTitle = useMemo(() => {
-    if (searchQuery) return `Results for "${searchQuery}"`;
+    if (debouncedQuery) return `Results for "${debouncedQuery}"`;
     if (filters.neighborhoods.length === 1) return `Properties in ${filters.neighborhoods[0]}`;
     if (filters.neighborhoods.length > 1) return `Properties in ${filters.neighborhoods.length} neighborhoods`;
     return "All Properties";
-  }, [searchQuery, filters.neighborhoods]);
+  }, [debouncedQuery, filters.neighborhoods]);
 
   // Map center: derive from first listing with coordinates, or use defaults
   const mapCenter = useMemo(() => {
