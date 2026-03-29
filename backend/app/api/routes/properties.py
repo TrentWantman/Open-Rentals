@@ -9,7 +9,7 @@ from typing import Any, List, Optional
 from fastapi import APIRouter, HTTPException, status, Query, Path, UploadFile, File
 from geoalchemy2 import Geography
 from geoalchemy2.functions import ST_DWithin, ST_Distance, ST_SetSRID, ST_MakePoint
-from sqlalchemy import select, func, and_, or_, case, cast
+from sqlalchemy import select, func, and_, or_, case, cast, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 
@@ -378,10 +378,14 @@ async def get_property(
         # In production, you'd check ownership here
         pass
 
-    # Increment view count
     if prop.status == PropertyStatus.ACTIVE:
-        prop.view_count += 1
+        await db.execute(
+            update(Property)
+            .where(Property.id == property_id)
+            .values(view_count=Property.view_count + 1)
+        )
         await db.commit()
+        await db.refresh(prop)
 
     return property_to_response(prop)
 
@@ -409,10 +413,14 @@ async def get_property_by_slug(
             detail="Property not found",
         )
 
-    # Increment view count
     if prop.status == PropertyStatus.ACTIVE:
-        prop.view_count += 1
+        await db.execute(
+            update(Property)
+            .where(Property.id == prop.id)
+            .values(view_count=Property.view_count + 1)
+        )
         await db.commit()
+        await db.refresh(prop)
 
     return property_to_response(prop)
 
