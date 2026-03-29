@@ -3,7 +3,7 @@ from typing import Any, Optional
 from uuid import UUID
 
 from geoalchemy2.functions import ST_DWithin, ST_MakePoint, ST_SetSRID
-from sqlalchemy import select, func, and_, or_, ColumnElement
+from sqlalchemy import select, func, and_, or_, update, ColumnElement
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.property import Property, PropertyStatus, PropertyType
@@ -210,11 +210,12 @@ class PropertySearchService:
         return properties, total
 
     async def increment_view_count(self, property_id: UUID) -> None:
-        """Increment the view count for a property."""
-        property = await self.get_by_id(property_id)
-        if property:
-            property.view_count += 1
-            await self.db.commit()
+        await self.db.execute(
+            update(Property)
+            .where(Property.id == property_id)
+            .values(view_count=Property.view_count + 1)
+        )
+        await self.db.commit()
 
     async def get_featured_properties(self, limit: int = 6) -> list[Property]:
         """Get featured/verified properties for homepage."""

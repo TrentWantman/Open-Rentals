@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from typing import Optional, List
 
 from fastapi import APIRouter, HTTPException, status, Query
-from sqlalchemy import select, func, and_, or_
+from sqlalchemy import select, func, and_, or_, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import selectinload
 
@@ -168,8 +168,11 @@ async def create_application(
 
     db.add(application)
 
-    # Increment property inquiry count
-    prop.inquiry_count += 1
+    await db.execute(
+        update(Property)
+        .where(Property.id == prop.id)
+        .values(inquiry_count=Property.inquiry_count + 1)
+    )
 
     try:
         await db.commit()
